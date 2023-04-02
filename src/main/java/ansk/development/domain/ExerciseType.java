@@ -1,7 +1,9 @@
 package ansk.development.domain;
 
 /**
- * All grouped exercise types are collected here.
+ * Enum that encapsulates all possible exercise types.
+ *
+ * @author Anton Skripin
  */
 public enum ExerciseType {
 
@@ -11,8 +13,10 @@ public enum ExerciseType {
     LEGS("legs"),
     SHOULDERS("shoulders"),
     TRICEPS("triceps"),
-
-    WARM_UP_AND_STRETCHING("warm up and stretching");
+    STRETCHING("stretching"),
+    WEIGHT_FREE("weight_free"),
+    PUSH_UPS("push_ups"),
+    ABS("abs");
 
 
     private final String type;

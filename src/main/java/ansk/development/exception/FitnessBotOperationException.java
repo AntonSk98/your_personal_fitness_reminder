@@ -1,5 +1,10 @@
 package ansk.development.exception;
 
+/**
+ * Exception that is related to processing one of the coming events.
+ *
+ * @author Anton Skripin
+ */
 public class FitnessBotOperationException extends Exception {
     public FitnessBotOperationException() {
         super();

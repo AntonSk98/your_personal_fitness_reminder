@@ -6,7 +6,7 @@
 
     <groupId>ansk.development</groupId>
     <artifactId>your_personal_fitness_reminder</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <telegrambots.version>6.0.1</telegrambots.version>
         <commons-lang.version>3.12.0</commons-lang.version>
-        <lombock.version>1.18.20</lombock.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-assembly-plugin.version>3.5.0</maven-assembly-plugin.version>
         <maven-compiler-source.version>14</maven-compiler-source.version>
@@ -38,10 +38,9 @@
             <version>${commons-lang.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombock.version}</version>
-            <scope>provided</scope>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
         </dependency>
     </dependencies>
 
