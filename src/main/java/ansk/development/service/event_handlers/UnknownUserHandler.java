@@ -38,8 +38,8 @@ public class UnknownUserHandler extends AbstractEventHandler {
                 .props()
                 .forNotification()
                 .getAboutUnknownUser(), username, chatId);
-        MessageMethod toRoot = new MessageMethod(messageAboutUnknownUser, rootChatId);
-        MessageMethod toUnknownUser = new MessageMethod(messageToUnknownUser, chatId);
+        MessageMethod toRoot = new MessageMethod(rootChatId, messageAboutUnknownUser);
+        MessageMethod toUnknownUser = new MessageMethod(chatId, messageToUnknownUser);
 
         try {
             FitnessBotResponseSender.getSender().sendMessages(toRoot.getMessage(), toUnknownUser.getMessage());

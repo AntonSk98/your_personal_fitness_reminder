@@ -117,10 +117,10 @@ public class FitnessReminderBot extends TelegramLongPollingBot {
                 .withWorkoutWithDumbbellsHandler()
                 .withStretchingWorkoutHandler()
                 .withAdaptableNotificationPolicyHandler()
-                .withUnknownUserHandler()
                 .onlyWithEnabledNotifications()
                 .withOneWorkoutAtTimeHandler()
                 .onlyWithTodayEvents()
+                .withUnknownUserHandler()
                 .onlyWithChatId()
                 .build();
     }
