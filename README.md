@@ -1,4 +1,4 @@
-# Your personal Fitness bot
+# Your Personal Fitness Reminder
 
 ## Overview.
 There are a few grammatical errors and some sentences could be rephrased for clarity. Here's a corrected version:
