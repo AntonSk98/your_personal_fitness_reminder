@@ -17,10 +17,10 @@ write to me today to get access to Fitness Reminder and take the first step towa
 ### Bot in action
 ![Bot in action](assets/workout.PNG)
 
-### Mini demonstration
+### Demo
 ![Constraint definition example](assets/demo.gif)
 
-## For developers
+## Some technical info
 Fitness Reminder was implemented using [Telegram's Bot API](https://core.telegram.org), which provides developers with a convenient way to create custom Telegram bots.
 
 The bot utilizes Telegram's message handler to receive commands from users and handles them based on the *Chain of Responsibility design pattern*. This bot is private and can be used only by authorized users! To get an access to the bot you should contact the owner.
