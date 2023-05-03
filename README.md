@@ -1,7 +1,6 @@
 # Your Personal Fitness Reminder
 
 ## Overview.
-There are a few grammatical errors and some sentences could be rephrased for clarity. Here's a corrected version:
 
 Fitness Reminder is a simple and easy-to-use Telegram bot that generates workouts for end-users. With its vast collection of exercises, like dumbbells, weight-free exercises, and abs exercises, the bot provides a wide range of workout options to choose from.
 
