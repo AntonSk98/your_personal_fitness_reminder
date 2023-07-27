@@ -1,6 +1,5 @@
 package ansk.development.service;
 
-import ansk.development.configuration.ConfigRegistry;
 import ansk.development.exception.FitnessBotOperationException;
 import ansk.development.service.api.IFitnessBotResponseSender;
 import org.slf4j.Logger;
@@ -8,8 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.util.concurrent.CompletableFuture;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -64,20 +61,22 @@ public class FitnessBotResponseSender implements IFitnessBotResponseSender {
     }
 
     @Override
-    public void sendWorkout(SendAnimation... exercises) {
-        String chatId = exercises.length > 0 ? exercises[0].getChatId() : EMPTY;
+    public void sendWorkout(String chatId, SendAnimation... exercises) {
         registerProcess(chatId);
-        CompletableFuture.runAsync(() -> {
+        var future = TelegramFitnessExecutorService.executeAsync(() -> {
             LOGGER.info("I am about to send the workout. Thread: {}.", Thread.currentThread());
             for (SendAnimation exercise : exercises) {
                 try {
                     sendWorkoutExercise(exercise);
-                    Thread.sleep(ConfigRegistry.props().forBot().getSendExerciseDelayInMs());
-                } catch (FitnessBotOperationException | InterruptedException e) {
-                    LOGGER.error("Unexpected error occurred while sending workout. ChatID: {}", chatId, e);
+                    Thread.sleep(10000);
+                } catch (FitnessBotOperationException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    break;
                 }
             }
-        }).thenRun(() -> unregisterProcess(chatId)).thenRun(() -> Thread.currentThread().notifyAll());
+            unregisterProcess(chatId);
+        });
     }
 
 }

@@ -23,6 +23,6 @@ public interface IFitnessBotResponseSender {
     void sendMessage(SendMessage message) throws FitnessBotOperationException;
     void sendMessages(SendMessage... messages) throws FitnessBotOperationException;
     void sendWorkoutExercise(SendAnimation exercise) throws FitnessBotOperationException;
-    void sendWorkout(SendAnimation... exercises) throws FitnessBotOperationException;
+    void sendWorkout(String chatId, SendAnimation... exercises) throws FitnessBotOperationException;
 
 }
