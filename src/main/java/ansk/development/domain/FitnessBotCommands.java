@@ -14,7 +14,8 @@ public enum FitnessBotCommands {
     WEIGHT_FREE("/weight_free"),
     RESET_TIMER("/reset_notifications_timer"),
     PUSH_UPS("/push_ups"),
-    ABS("/abs");
+    ABS("/abs"),
+    STOP_WORKOUT("/stop_workout");
 
     private final String command;
 

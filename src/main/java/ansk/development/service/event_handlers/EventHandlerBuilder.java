@@ -71,13 +71,18 @@ public class EventHandlerBuilder {
         return this;
     }
 
-    public EventHandlerBuilder withOneWorkoutAtTimeHandler() {
-        topEventHandler = new WithOneWorkoutAtTimeFilter(topEventHandler);
+    public EventHandlerBuilder withCancelWorkoutIfRunningHandler() {
+        topEventHandler = new WithCancelableRunningWorkout(topEventHandler);
         return this;
     }
 
     public EventHandlerBuilder withUnknownCommandHandler() {
         topEventHandler = new UnknownCommandHandler();
+        return this;
+    }
+
+    public EventHandlerBuilder withStoppableWorkoutHandler() {
+        topEventHandler = new StopWorkoutHandler(topEventHandler);
         return this;
     }
 

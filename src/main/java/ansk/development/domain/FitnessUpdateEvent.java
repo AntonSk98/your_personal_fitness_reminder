@@ -74,6 +74,10 @@ public class FitnessUpdateEvent {
         return this.isKnownCommand() && WITH_DUMBBELLS.equals(this.toFitnessBotCommand());
     }
 
+    public boolean isStopWorkoutEvent() {
+        return this.isKnownCommand() && STOP_WORKOUT.equals(this.toFitnessBotCommand());
+    }
+
     public boolean isAbsWorkout() {
         return this.isKnownCommand() && ABS.equals(this.toFitnessBotCommand());
     }
