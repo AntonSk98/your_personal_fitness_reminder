@@ -1,5 +1,7 @@
 package ansk.development.repository.api;
 
+import java.util.concurrent.Future;
+
 /**
  * Collects running requests for every user.
  *
@@ -7,7 +9,9 @@ package ansk.development.repository.api;
  */
 public interface IWorkoutProcessRepository {
 
-    void addChatToRunningWorkoutProcesses(String chatId);
-    void removeChatFromRunningWorkoutProcesses(String chatId);
+    void addRunningProcess(String chatId, Future<?> process);
+    void removeRunningProcess(String chatId);
     boolean hasRunningProcesses(String chatId);
+
+    void interruptProcess(String chatId);
 }
