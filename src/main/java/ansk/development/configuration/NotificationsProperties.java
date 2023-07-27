@@ -6,6 +6,8 @@ package ansk.development.configuration;
  * @author Anton Skripin
  */
 public class NotificationsProperties {
+
+    private static final String PLACEHOLDER = "[#]";
     private String workoutWithDumbbells;
     private String stretchingWorkout;
     private String weightFree;
@@ -20,6 +22,16 @@ public class NotificationsProperties {
     private String successfullyResetTimer;
     private String failedToResetTimer;
     private String pushUps;
+
+    private String stopWorkout;
+
+    private String noOngoingWorkout;
+
+    private String workoutReminder;
+
+    private String tooManyRequest;
+
+    private String defaultSecondsPlaceholder;
 
     public String getWorkoutWithDumbbells() {
         return workoutWithDumbbells;
@@ -131,5 +143,49 @@ public class NotificationsProperties {
 
     public void setPushUps(String pushUps) {
         this.pushUps = pushUps;
+    }
+
+    public String getStopWorkout() {
+        return stopWorkout;
+    }
+
+    public void setStopWorkout(String stopWorkout) {
+        this.stopWorkout = stopWorkout;
+    }
+
+    public String getNoOngoingWorkout() {
+        return noOngoingWorkout;
+    }
+
+    public void setNoOngoingWorkout(String noOngoingWorkout) {
+        this.noOngoingWorkout = noOngoingWorkout;
+    }
+
+    public String getTooManyRequest() {
+        return tooManyRequest;
+    }
+
+    public void setTooManyRequest(String tooManyRequest) {
+        this.tooManyRequest = tooManyRequest;
+    }
+
+    public String getDefaultSecondsPlaceholder() {
+        return defaultSecondsPlaceholder;
+    }
+
+    public void setDefaultSecondsPlaceholder(String defaultSecondsPlaceholder) {
+        this.defaultSecondsPlaceholder = defaultSecondsPlaceholder;
+    }
+
+    public static String customizeTemplate(String template, String value) {
+        return template.replace(PLACEHOLDER, value);
+    }
+
+    public String getWorkoutReminder() {
+        return workoutReminder;
+    }
+
+    public void setWorkoutReminder(String workoutReminder) {
+        this.workoutReminder = workoutReminder;
     }
 }
