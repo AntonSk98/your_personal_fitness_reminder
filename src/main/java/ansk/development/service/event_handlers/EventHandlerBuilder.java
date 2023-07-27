@@ -77,7 +77,7 @@ public class EventHandlerBuilder {
     }
 
     public EventHandlerBuilder withUnknownCommandHandler() {
-        topEventHandler = new UnknownCommandHandler();
+        topEventHandler = new UnknownCommandHandler(topEventHandler);
         return this;
     }
 

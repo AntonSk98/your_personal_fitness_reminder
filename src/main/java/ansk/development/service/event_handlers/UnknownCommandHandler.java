@@ -17,13 +17,17 @@ public class UnknownCommandHandler extends AbstractEventHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UnknownCommandHandler.class);
 
-    protected UnknownCommandHandler() {
-        super();
+    protected UnknownCommandHandler(EventHandler nextEventHandler) {
+        super(nextEventHandler);
     }
 
     @Override
     public void handle(FitnessUpdateEvent updateEvent) {
-        unknownCommandHandler(updateEvent.getChatId());
+        if (updateEvent.isUnknownCommand()) {
+            unknownCommandHandler(updateEvent.getChatId());
+            return;
+        }
+        super.handle(updateEvent);
     }
 
     private void unknownCommandHandler(String chatId) {
