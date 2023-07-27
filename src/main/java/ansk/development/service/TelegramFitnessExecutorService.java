@@ -1,9 +1,6 @@
 package ansk.development.service;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * Schedule executor service encapsulates to serve the necessary scheduled jobs for this bot.
@@ -13,6 +10,10 @@ import java.util.concurrent.TimeUnit;
 public class TelegramFitnessExecutorService {
 
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10);
+
+    public static Future<?> executeAsync(Runnable runnable) {
+        return executorService.submit(runnable);
+    }
 
     public static void scheduleOnce(Runnable task, int initialDelay, TimeUnit timeUnit) {
         executorService.schedule(task, initialDelay, timeUnit);

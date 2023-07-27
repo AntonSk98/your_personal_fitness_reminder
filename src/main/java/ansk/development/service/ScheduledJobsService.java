@@ -15,8 +15,6 @@ import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static ansk.development.domain.FitnessUpdateEvent.createInternalUpdateEvent;
-
 /**
  * Implementation of {@link IScheduledJobsRepository}
  *
@@ -44,7 +42,7 @@ public class ScheduledJobsService implements IScheduledJobsService {
         if (ConfigRegistry.props().forBot().isOnStartupNotificationsEnabled()) {
             TelegramFitnessExecutorService.scheduleOnce(
                     this::sendOnStartUpMessage,
-                    10,
+                    5,
                     TimeUnit.SECONDS);
         }
     }
@@ -99,7 +97,7 @@ public class ScheduledJobsService implements IScheduledJobsService {
         for (String chatId : NotificationsRepository.getRepository().getAllChatIds()) {
             MessageMethod messageMethod = new MessageMethod(chatId, ConfigRegistry.props().forNotification().getOnStartup());
             try {
-                FitnessBotResponseSender.getSender().sendMessage(messageMethod.getMessage());
+                FitnessBotSender.getSender().sendMessage(messageMethod.getMessage());
             } catch (FitnessBotOperationException e) {
                 LOGGER.error("Unexpected error occurred while sending a greeting message. ChatID: {}", chatId);
             }
@@ -116,10 +114,12 @@ public class ScheduledJobsService implements IScheduledJobsService {
     }
 
     private void sendFitnessReminder(String chatId) {
-        FitnessReminderBot
-                .getFitnessBot()
-                .getEventHandlerChain()
-                .handle(createInternalUpdateEvent(chatId, FitnessBotCommands.STRETCHING));
+        MessageMethod messageMethod = new MessageMethod(chatId, ConfigRegistry.props().forNotification().getWorkoutReminder());
+        try {
+            FitnessBotSender.getSender().sendMessages(messageMethod.getMessage());
+        } catch (FitnessBotOperationException e) {
+            LOGGER.error("Unexpected error occurred while sending a fitness reminder. ChatID: {}", chatId);
+        }
     }
 
     private void checkBotSession() {
