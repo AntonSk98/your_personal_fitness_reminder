@@ -3,7 +3,7 @@ package ansk.development.service.event_handlers;
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
-import ansk.development.service.FitnessBotResponseSender;
+import ansk.development.service.FitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class UnknownUserHandler extends AbstractEventHandler {
         MessageMethod toUnknownUser = new MessageMethod(chatId, messageToUnknownUser);
 
         try {
-            FitnessBotResponseSender.getSender().sendMessages(toRoot.getMessage(), toUnknownUser.getMessage());
+            FitnessBotSender.getSender().sendMessages(toRoot.getMessage(), toUnknownUser.getMessage());
         } catch (FitnessBotOperationException e) {
             LOGGER.error("Received a message from an unknown user but could not process it! Username: {}, ChatID: {}", username, chatId);
         }

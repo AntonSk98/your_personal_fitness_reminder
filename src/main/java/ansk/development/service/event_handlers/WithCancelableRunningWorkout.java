@@ -16,11 +16,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author Anton Skripin
  */
-public class WithAbortableRunningWorkout extends AbstractEventHandler {
+public class WithCancelableRunningWorkout extends AbstractEventHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WithAbortableRunningWorkout.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WithCancelableRunningWorkout.class);
 
-    public WithAbortableRunningWorkout(EventHandler nextEventHandler) {
+    public WithCancelableRunningWorkout(EventHandler nextEventHandler) {
         super(nextEventHandler);
     }
 
@@ -37,7 +37,7 @@ public class WithAbortableRunningWorkout extends AbstractEventHandler {
             try {
                 FitnessBotSender.getSender().sendMessage(messageMethod.getMessage());
             } catch (FitnessBotOperationException e) {
-                throw new RuntimeException(e);
+                LOGGER.error("Unexpected error occurred while aborting running workout");
             }
             LOGGER.warn("Changing workout type for user {}", chatId);
         }

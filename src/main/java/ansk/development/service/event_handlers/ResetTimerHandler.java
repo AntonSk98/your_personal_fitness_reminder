@@ -3,7 +3,7 @@ package ansk.development.service.event_handlers;
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
-import ansk.development.service.FitnessBotResponseSender;
+import ansk.development.service.FitnessBotSender;
 import ansk.development.service.ScheduledJobsService;
 import ansk.development.service.methods.MessageMethod;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class ResetTimerHandler extends AbstractEventHandler {
         final String fail = ConfigRegistry.props().forNotification().getFailedToResetTimer();
         MessageMethod messageMethod = new MessageMethod(chatId, isTimerReset ? success : fail);
         try {
-            FitnessBotResponseSender.getSender().sendMessage(messageMethod.getMessage());
+            FitnessBotSender.getSender().sendMessage(messageMethod.getMessage());
         } catch (FitnessBotOperationException e) {
             LOGGER.error("Something went wrong while resetting a timer. ChatID: {}", chatId);
         }

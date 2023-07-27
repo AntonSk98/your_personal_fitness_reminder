@@ -1,34 +1,43 @@
 package ansk.development.service;
 
+import ansk.development.configuration.ConfigRegistry;
+import ansk.development.configuration.NotificationsProperties;
 import ansk.development.exception.FitnessBotOperationException;
-import ansk.development.service.api.IFitnessBotResponseSender;
+import ansk.development.repository.WorkoutProcessRepository;
+import ansk.development.repository.api.IWorkoutProcessRepository;
+import ansk.development.service.api.IFitnessBotSender;
+import ansk.development.service.methods.MessageMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.ResponseParameters;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.Future;
 
 /**
- * Implementation of {@link IFitnessBotResponseSender}.
+ * Implementation of {@link IFitnessBotSender}.
  *
  * @author Anton Skripin
  */
-public class FitnessBotResponseSender implements IFitnessBotResponseSender {
+public class FitnessBotSender implements IFitnessBotSender {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IFitnessBotResponseSender.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IFitnessBotSender.class);
+    private static IFitnessBotSender fitnessBotResponseSender;
+    private final IWorkoutProcessRepository processRepository;
 
-    private static IFitnessBotResponseSender fitnessBotResponseSender;
 
-
-    private FitnessBotResponseSender() {
-
+    private FitnessBotSender() {
+        this.processRepository = WorkoutProcessRepository.getRepository();
     }
 
-    public static IFitnessBotResponseSender getSender() {
+    public static IFitnessBotSender getSender() {
         if (fitnessBotResponseSender == null) {
-            fitnessBotResponseSender = new FitnessBotResponseSender();
+            fitnessBotResponseSender = new FitnessBotSender();
         }
         return fitnessBotResponseSender;
     }
@@ -47,6 +56,9 @@ public class FitnessBotResponseSender implements IFitnessBotResponseSender {
     public void sendWorkoutExercise(SendAnimation exercise) throws FitnessBotOperationException {
         try {
             FitnessReminderBot.getFitnessBot().execute(exercise);
+        } catch (TelegramApiRequestException e) {
+            onTooManyRequestsMessage(exercise.getChatId(), e.getParameters());
+            throw new FitnessBotOperationException(e);
         } catch (TelegramApiException e) {
             LOGGER.error("An error occurred while sending an exercise: {}", exercise, e);
             throw new FitnessBotOperationException(e);
@@ -61,22 +73,44 @@ public class FitnessBotResponseSender implements IFitnessBotResponseSender {
     }
 
     @Override
-    public void sendWorkout(String chatId, SendAnimation... exercises) {
-        registerProcess(chatId);
-        var future = TelegramFitnessExecutorService.executeAsync(() -> {
-            LOGGER.info("I am about to send the workout. Thread: {}.", Thread.currentThread());
+    public void sendWorkoutAsRegisteredProcess(String chatId, SendAnimation... exercises) {
+        registerProcess(chatId, TelegramFitnessExecutorService.executeAsync(() -> {
             for (SendAnimation exercise : exercises) {
                 try {
                     sendWorkoutExercise(exercise);
-                    Thread.sleep(10000);
+                    Thread.sleep(ConfigRegistry.props().forBot().getSendExerciseDelayInMs());
                 } catch (FitnessBotOperationException e) {
-                    throw new RuntimeException(e);
+                     LOGGER.error("Unexpected error occurred while sending workout. ChatID: {}", chatId);
                 } catch (InterruptedException e) {
+                    LOGGER.warn("Running process was interrupted by another process");
                     break;
                 }
             }
             unregisterProcess(chatId);
-        });
+        }));
+
+    }
+
+    @Override
+    public void onTooManyRequestsMessage(String chatId, ResponseParameters responseParameters) throws FitnessBotOperationException {
+        Objects.requireNonNull(chatId);
+        String retryAfterSeconds = Optional
+                .ofNullable(responseParameters)
+                .map(ResponseParameters::getRetryAfter)
+                .map(String::valueOf)
+                .orElse(ConfigRegistry.props().forNotification().getDefaultSecondsPlaceholder());
+        String templateNotification = ConfigRegistry.props().forNotification().getTooManyRequest();
+        MessageMethod messageMethod = new MessageMethod(chatId,
+                NotificationsProperties.customizeTemplate(templateNotification, retryAfterSeconds));
+        this.sendMessages(messageMethod.getMessage());
+    }
+
+    private void registerProcess(String chatId, Future<?> process) {
+        this.processRepository.addRunningProcess(chatId, process);
+    }
+
+    private void unregisterProcess(String chatId) {
+        this.processRepository.removeRunningProcess(chatId);
     }
 
 }

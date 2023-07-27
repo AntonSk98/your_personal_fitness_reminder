@@ -3,7 +3,7 @@ package ansk.development.service.event_handlers;
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
-import ansk.development.service.FitnessBotResponseSender;
+import ansk.development.service.FitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
 import ansk.development.service.methods.WorkoutMethod;
 import org.slf4j.Logger;
@@ -35,8 +35,8 @@ public class GenerateWorkoutWithDumbbellsHandler extends AbstractEventHandler {
         MessageMethod message = new MessageMethod(chatId, ConfigRegistry.props().forNotification().getWorkoutWithDumbbells());
         WorkoutMethod workoutWithDumbbells = WorkoutMethod.generateWorkout(chatId).withDumbbells();
         try {
-            FitnessBotResponseSender.getSender().sendMessages(message.getMessage());
-            FitnessBotResponseSender.getSender().sendWorkout(workoutWithDumbbells.getExercises());
+            FitnessBotSender.getSender().sendMessages(message.getMessage());
+            FitnessBotSender.getSender().sendWorkoutAsRegisteredProcess(chatId, workoutWithDumbbells.getExercises());
         } catch (FitnessBotOperationException e) {
             LOGGER.error("Unexpected error occurred while generating workout with dumbbells. ChatID: {}", chatId);
         }

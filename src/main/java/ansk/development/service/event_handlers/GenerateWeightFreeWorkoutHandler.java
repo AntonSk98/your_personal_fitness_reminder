@@ -3,7 +3,7 @@ package ansk.development.service.event_handlers;
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
-import ansk.development.service.FitnessBotResponseSender;
+import ansk.development.service.FitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
 import ansk.development.service.methods.WorkoutMethod;
 import org.slf4j.Logger;
@@ -35,8 +35,8 @@ public class GenerateWeightFreeWorkoutHandler extends AbstractEventHandler {
         MessageMethod messageMethod = new MessageMethod(chatId, ConfigRegistry.props().forNotification().getWeightFree());
         WorkoutMethod workoutMethod = WorkoutMethod.generateWorkout(chatId).weightFreeWorkout();
         try {
-            FitnessBotResponseSender.getSender().sendMessage(messageMethod.getMessage());
-            FitnessBotResponseSender.getSender().sendWorkout(workoutMethod.getExercises());
+            FitnessBotSender.getSender().sendMessage(messageMethod.getMessage());
+            FitnessBotSender.getSender().sendWorkoutAsRegisteredProcess(chatId, workoutMethod.getExercises());
         } catch (FitnessBotOperationException e) {
             LOGGER.error("Unexpected error occurred while generating a weight-free workout. ChatID: {}", chatId);
         }

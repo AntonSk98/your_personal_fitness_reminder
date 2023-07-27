@@ -3,7 +3,7 @@ package ansk.development.service.event_handlers;
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
-import ansk.development.service.FitnessBotResponseSender;
+import ansk.development.service.FitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
 import ansk.development.service.methods.WorkoutMethod;
 import org.slf4j.Logger;
@@ -36,8 +36,8 @@ public class GenerateStretchingWorkoutHandler extends AbstractEventHandler {
         MessageMethod message = new MessageMethod(chatId, ConfigRegistry.props().forNotification().getStretchingWorkout());
         WorkoutMethod morningWorkout = WorkoutMethod.generateWorkout(chatId).stretchingWorkout();
         try {
-            FitnessBotResponseSender.getSender().sendMessage(message.getMessage());
-            FitnessBotResponseSender.getSender().sendWorkout(morningWorkout.getExercises());
+            FitnessBotSender.getSender().sendMessage(message.getMessage());
+            FitnessBotSender.getSender().sendWorkoutAsRegisteredProcess(chatId, morningWorkout.getExercises());
         } catch (FitnessBotOperationException e) {
             LOGGER.error("Unexpected error occurred while sending a stretching workout to the user. ChaID: {}", chatId);
         }

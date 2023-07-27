@@ -3,7 +3,7 @@ package ansk.development.service.event_handlers;
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
-import ansk.development.service.FitnessBotResponseSender;
+import ansk.development.service.FitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
 import ansk.development.service.methods.WorkoutMethod;
 import org.slf4j.Logger;
@@ -25,21 +25,24 @@ public class GeneratePushUpsWorkoutHandler extends AbstractEventHandler {
     @Override
     public void handle(FitnessUpdateEvent updateEvent) {
         if (updateEvent.isPushUpsNotificationEvent()) {
-            MessageMethod messageMethod = new MessageMethod(updateEvent.getChatId(),
-                    ConfigRegistry
-                            .props()
-                            .forNotification()
-                            .getPushUps());
-            WorkoutMethod pushUpsWorkout = WorkoutMethod.generateWorkout(updateEvent.getChatId()).pushUpsWorkout();
-            try {
-                FitnessBotResponseSender.getSender().sendMessage(messageMethod.getMessage());
-                FitnessBotResponseSender.getSender().sendWorkout(pushUpsWorkout.getExercises());
-            } catch (FitnessBotOperationException e) {
-                LOGGER.error("Unexpected error occurred while sending push-up workout. Chat ID: {}", updateEvent.getChatId());
-            }
-
+            generatePushUpsWorkout(updateEvent.getChatId());
             return;
         }
         super.handle(updateEvent);
+    }
+
+    private void generatePushUpsWorkout(String chatId) {
+        MessageMethod messageMethod = new MessageMethod(chatId,
+                ConfigRegistry
+                        .props()
+                        .forNotification()
+                        .getPushUps());
+        WorkoutMethod pushUpsWorkout = WorkoutMethod.generateWorkout(chatId).pushUpsWorkout();
+        try {
+            FitnessBotSender.getSender().sendMessage(messageMethod.getMessage());
+            FitnessBotSender.getSender().sendWorkoutAsRegisteredProcess(chatId, pushUpsWorkout.getExercises());
+        } catch (FitnessBotOperationException e) {
+            LOGGER.error("Unexpected error occurred while sending push-up workout. Chat ID: {}", chatId);
+        }
     }
 }
