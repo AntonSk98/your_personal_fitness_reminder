@@ -29,19 +29,6 @@ public class FitnessUpdateEvent {
         this.update = update;
     }
 
-    public static FitnessUpdateEvent createInternalUpdateEvent(String chatId, FitnessBotCommands event) {
-        Chat chat = new Chat();
-        chat.setId(Long.valueOf(chatId));
-        Message message = new Message();
-        message.setChat(chat);
-        message.setDate(Math.toIntExact(Instant.now().getEpochSecond()));
-        message.setText(event.command());
-        Update update = new Update();
-        update.setMessage(message);
-
-        return new FitnessUpdateEvent(update);
-    }
-
     public Update getUpdate() {
         return update;
     }
