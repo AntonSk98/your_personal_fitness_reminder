@@ -46,11 +46,11 @@ public class FitnessUpdateEvent {
     }
 
     public boolean isDisableNotificationsEvent() {
-        return this.isKnownCommand() && this.toFitnessBotCommand().equals(DISABLE_NOTIFICATIONS);
+        return this.isKnownCommand() && this.toFitnessBotCommand().equals(DISABLE_FITNESS_REMINDERS);
     }
 
     public boolean isEnableNotificationEvent() {
-        return this.isKnownCommand() && this.toFitnessBotCommand().equals(ENABLE_NOTIFICATIONS);
+        return this.isKnownCommand() && this.toFitnessBotCommand().equals(ENABLE_FITNESS_REMINDERS);
     }
 
     public boolean isStretchingWorkoutEvent() {
@@ -88,6 +88,10 @@ public class FitnessUpdateEvent {
 
     public boolean isEventFromUnknownUser() {
         return !isFromAllowedUser();
+    }
+
+    public boolean isUnknownCommand() {
+        return !isKnownCommand();
     }
 
     private boolean isKnownCommand() {

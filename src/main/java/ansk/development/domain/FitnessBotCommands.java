@@ -8,8 +8,8 @@ package ansk.development.domain;
 public enum FitnessBotCommands {
 
     WITH_DUMBBELLS("/with_dumbbells"),
-    DISABLE_NOTIFICATIONS("/disable_notifications"),
-    ENABLE_NOTIFICATIONS("/enable_notifications"),
+    DISABLE_FITNESS_REMINDERS("/disable_fitness_reminders"),
+    ENABLE_FITNESS_REMINDERS("/enable_fitness_reminders"),
     STRETCHING("/stretching"),
     WEIGHT_FREE("/weight_free"),
     RESET_TIMER("/reset_notifications_timer"),

@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import static ansk.development.domain.FitnessBotCommands.DISABLE_NOTIFICATIONS;
-import static ansk.development.domain.FitnessBotCommands.ENABLE_NOTIFICATIONS;
+import static ansk.development.domain.FitnessBotCommands.DISABLE_FITNESS_REMINDERS;
+import static ansk.development.domain.FitnessBotCommands.ENABLE_FITNESS_REMINDERS;
 
 /**
  * Event handler that is responsible for enabling and disabling notifications for a given client.
@@ -44,7 +44,7 @@ public class ChangeBotNotificationPolicyHandler extends AbstractEventHandler {
 
     private void disableNotifications(String chatId) {
         try {
-            FitnessBotSender.getSender().sendMessage(getMessage(chatId, DISABLE_NOTIFICATIONS));
+            FitnessBotSender.getSender().sendMessage(getMessage(chatId, DISABLE_FITNESS_REMINDERS));
             NotificationsRepository.getRepository().disableNotificationsForUser(chatId);
         } catch (FitnessBotOperationException fitnessBotOperationException) {
             LOGGER.error("An error occurred while handling an event to disable notifications. ChatID: {}", chatId);
@@ -53,7 +53,7 @@ public class ChangeBotNotificationPolicyHandler extends AbstractEventHandler {
 
     private void enableNotifications(String chatId) {
         try {
-            FitnessBotSender.getSender().sendMessage(getMessage(chatId, ENABLE_NOTIFICATIONS));
+            FitnessBotSender.getSender().sendMessage(getMessage(chatId, ENABLE_FITNESS_REMINDERS));
             NotificationsRepository.getRepository().enableNotificationsForUser(chatId);
         } catch (FitnessBotOperationException fitnessBotOperationException) {
             LOGGER.error("An error occurred while handling an event to enable notifications. ChatID: {}", chatId);
@@ -61,7 +61,7 @@ public class ChangeBotNotificationPolicyHandler extends AbstractEventHandler {
     }
 
     private SendMessage getMessage(String chatId, FitnessBotCommands event) {
-        if (ENABLE_NOTIFICATIONS.equals(event)) {
+        if (ENABLE_FITNESS_REMINDERS.equals(event)) {
             final String enableNotificationsMessage = ConfigRegistry
                     .props()
                     .forNotification()
