@@ -28,14 +28,15 @@ public class FitnessReminderBot extends TelegramLongPollingBot {
     private final EventHandler eventHandlerChain;
     private final BotSession botSession;
 
-    private FitnessReminderBot() {
+    public FitnessReminderBot(String botToken) {
+        super(botToken);
         this.eventHandlerChain = initializeEventHandlerChain();
         this.botSession = initializeSession();
     }
 
     public static FitnessReminderBot getFitnessBot() {
         if (fitnessReminderBot == null) {
-            fitnessReminderBot = new FitnessReminderBot();
+            fitnessReminderBot = new FitnessReminderBot(ConfigRegistry.props().botCredentials().getToken());
         }
         return fitnessReminderBot;
     }
@@ -47,11 +48,6 @@ public class FitnessReminderBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         return ConfigRegistry.props().forBot().getUsername();
-    }
-
-    @Override
-    public String getBotToken() {
-        return ConfigRegistry.props().forBot().getToken();
     }
 
     @Override

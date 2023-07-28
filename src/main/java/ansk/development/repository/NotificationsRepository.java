@@ -15,7 +15,7 @@ public class NotificationsRepository implements INotificationsRepository {
     private static NotificationsRepository notificationsRepository;
 
     private NotificationsRepository() {
-        this.notification = new Notification(ConfigRegistry.props().forBot().getChatId(), true);
+        this.notification = new Notification(ConfigRegistry.props().botCredentials().getChatId(), true);
     }
 
     public static NotificationsRepository getRepository() {

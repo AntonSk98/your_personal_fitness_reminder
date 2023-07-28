@@ -9,13 +9,11 @@ import java.util.List;
  */
 public class FitnessBotProperties {
     private String username;
-    private String token;
     private boolean onStartupNotificationsEnabled;
     private boolean ignoreOldEvents;
     private int sendExerciseDelayInMs;
     private int groupIntervalDelayInMs;
     private String creator;
-    private String chatId;
 
     public String getUsername() {
         return username;
@@ -23,14 +21,6 @@ public class FitnessBotProperties {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public boolean isOnStartupNotificationsEnabled() {
@@ -71,13 +61,5 @@ public class FitnessBotProperties {
 
     public void setCreator(String creator) {
         this.creator = creator;
-    }
-
-    public String getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(String rootChatId) {
-        this.chatId = rootChatId;
     }
 }

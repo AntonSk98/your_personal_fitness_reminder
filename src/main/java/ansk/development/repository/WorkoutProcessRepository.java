@@ -17,7 +17,7 @@ public class WorkoutProcessRepository implements IWorkoutProcessRepository {
     private final RunningProcess runningProcess;
 
     private WorkoutProcessRepository() {
-        this.runningProcess = new RunningProcess(ConfigRegistry.props().forBot().getChatId());
+        this.runningProcess = new RunningProcess(ConfigRegistry.props().botCredentials().getChatId());
     }
 
     public static WorkoutProcessRepository getRepository() {

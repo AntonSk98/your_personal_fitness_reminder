@@ -19,17 +19,21 @@ public class ConfigRegistry {
 
     private static final String PATH_TO_CONFIG = System.getenv(PROPERTIES_PATH_ENV_VARIABLE_NAME);
     private static ConfigRegistry configRegistry;
+
+    private final BotCredentials botCredentials;
     private final FitnessBotProperties fitnessBotProperties;
     private final NotificationsProperties notificationsProperties;
     private final WorkoutSizeProperties workoutSizeProperties;
     private final ScheduledJobsProperties scheduledJobsProperties;
     private final ExerciseTypeCatalogSize exerciseTypeCatalogSize;
 
-    private ConfigRegistry(FitnessBotProperties fitnessBotProperties,
+    private ConfigRegistry(BotCredentials botCredentials,
+                           FitnessBotProperties fitnessBotProperties,
                            NotificationsProperties notificationsProperties,
                            WorkoutSizeProperties workoutSizeProperties,
                            ScheduledJobsProperties scheduledJobsProperties,
                            ExerciseTypeCatalogSize exerciseTypeCatalogSize) {
+        this.botCredentials = botCredentials;
         this.fitnessBotProperties = fitnessBotProperties;
         this.notificationsProperties = notificationsProperties;
         this.workoutSizeProperties = workoutSizeProperties;
@@ -40,6 +44,7 @@ public class ConfigRegistry {
     public static ConfigRegistry props() {
         if (configRegistry == null) {
             configRegistry = new ConfigRegistry(
+                    new BotCredentials(),
                     initializeFitnessBotProperties(),
                     initializeNotificationProperties(),
                     initializeWorkoutSizeProperties(),
@@ -78,6 +83,10 @@ public class ConfigRegistry {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(String.format("File does not exists under the following path: %s", PATH_TO_CONFIG), e);
         }
+    }
+
+    public BotCredentials botCredentials() {
+        return botCredentials;
     }
 
     public FitnessBotProperties forBot() {

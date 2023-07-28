@@ -111,7 +111,7 @@ public class FitnessUpdateEvent {
     private boolean isFromAllowedUser() {
         return update.hasMessage() && Objects.nonNull(update.getMessage().getChat()) && ConfigRegistry
                 .props()
-                .forBot()
+                .botCredentials()
                 .getChatId()
                 .equals(this.getChatId());
     }
