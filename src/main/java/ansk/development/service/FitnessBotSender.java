@@ -81,6 +81,7 @@ public class FitnessBotSender implements IFitnessBotSender {
                     Thread.sleep(ConfigRegistry.props().forBot().getSendExerciseDelayInMs());
                 } catch (FitnessBotOperationException e) {
                      LOGGER.error("Unexpected error occurred while sending workout. ChatID: {}", chatId);
+                     break;
                 } catch (InterruptedException e) {
                     LOGGER.warn("Running process was interrupted by another process");
                     break;
