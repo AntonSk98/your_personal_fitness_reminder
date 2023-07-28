@@ -13,7 +13,7 @@ public interface IScheduledJobsService {
 
     void checkBotSessionPeriodically();
 
-    void sendFitnessReminderSchedule(FitnessBotCommands exerciseType);
+    void sendFitnessReminderSchedule();
 
     boolean resetFitnessReminderTimer(String chatId);
 }

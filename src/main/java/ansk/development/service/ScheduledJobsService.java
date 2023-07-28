@@ -59,7 +59,7 @@ public class ScheduledJobsService implements IScheduledJobsService {
     }
 
     @Override
-    public void sendFitnessReminderSchedule(FitnessBotCommands fitnessBotCommands) {
+    public void sendFitnessReminderSchedule() {
         Runnable fitnessReminderRunnable = sendFitnessReminderRunnable();
         Thread fitnessReminderThread = new Thread(fitnessReminderRunnable);
         fitnessReminderThread.start();

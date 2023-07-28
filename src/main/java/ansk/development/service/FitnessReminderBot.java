@@ -73,7 +73,7 @@ public class FitnessReminderBot extends TelegramLongPollingBot {
     public FitnessReminderBot withFitnessReminders() {
         ScheduledJobsService
                 .scheduledJobsService()
-                .sendFitnessReminderSchedule(FitnessBotCommands.WITH_DUMBBELLS);
+                .sendFitnessReminderSchedule();
         return this;
     }
 
@@ -112,7 +112,6 @@ public class FitnessReminderBot extends TelegramLongPollingBot {
                 .withStretchingWorkoutHandler()
                 .withCancelWorkoutIfRunningHandler()
                 .withAdaptableNotificationPolicyHandler()
-                .onlyWithEnabledNotifications()
                 .withStoppableWorkoutHandler()
                 .withResetTimerHandler()
                 .onlyWithTodayEvents()
