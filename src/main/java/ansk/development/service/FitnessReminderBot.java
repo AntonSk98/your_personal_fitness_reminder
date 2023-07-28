@@ -47,7 +47,7 @@ public class FitnessReminderBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return ConfigRegistry.props().forBot().getUsername();
+        return ConfigRegistry.props().botCredentials().getUsername();
     }
 
     @Override

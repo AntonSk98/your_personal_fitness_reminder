@@ -8,21 +8,11 @@ import java.util.List;
  * @author Anton Skripin
  */
 public class FitnessBotProperties {
-    private String username;
     private boolean onStartupNotificationsEnabled;
     private boolean ignoreOldEvents;
     private int sendExerciseDelayInMs;
     private int groupIntervalDelayInMs;
     private String creator;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public boolean isOnStartupNotificationsEnabled() {
         return onStartupNotificationsEnabled;
     }
