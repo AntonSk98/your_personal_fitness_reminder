@@ -1,0 +1,61 @@
+# all properties are to be collected here...
+
+notifications:
+  workoutWithDumbbells: Get ready to pump some iron! Dumbbell workout coming right up!
+  stretchingWorkout: Time to unwind and stretch it out! Let's do some stretches together!
+  weightFree: No weights, no problem! We've got an awesome weight-free workout for you!
+  pushUps: Drop and give me 20! A push-up workout is on the way!
+  absWorkout: Ready to sculpt those abs? Let's crunch, plank, and rock this abs workout!
+  toUnknownUser: Hey there! This bot is currently private. Reach out to AntonSk98 to get access and start exercising!
+  aboutUnknownUser: Uh-oh! Someone tried to access your amazing fitness bot. Keep it exclusive for yourself! ->
+  unknownCommand: Oops, seems like I don't recognize that command. Let's stick to the exercises for now!
+  enabledNotifications: Yay! Your motivation booster is ON! Prepare for inspiring workout reminders!
+  disabledNotifications: Not feeling the notifications? No worries! We'll be here when you're ready to get back on track!
+  onStartup: Hi there! I'm back and better than ever! 
+  workoutInProgress: Keep the momentum going! Switching to another awesome workout!
+  successfullyResetTimer: Timer reset successful! Your next fitness reminder is just a couple of hours away.
+  failedToResetTimer: Oops! Something went awry. We'll fix it, promise! Please try again later.
+  stopWorkout: Great job on the workout! Take a breather, and see you for the next one!
+  noOngoingWorkout: Hey, you're currently on a workout break. Time to get moving again! Let's do this!
+  workoutReminder: Time to rise and shine! Get up and get moving with your workout!
+  tooManyRequest: Woah, slow down! I'm giving it my all, but I need a breather too. Try again in [#] seconds!
+  defaultSecondsPlaceholder: some
+
+scheduled_jobs:
+  checkSession:
+    initialDelay: 5
+    interval: 5
+    timeUnit: MINUTES
+  sendWorkout:
+    initialDelay: 120
+    interval: 180
+    timeUnit: MINUTES
+
+
+fitness_bot:
+  onStartupNotificationsEnabled: true
+  ignoreOldEvents: true
+  sendExerciseDelayInMs: 30000
+  groupIntervalDelayInMs: 300000
+  creator: AntonSk98
+
+workout_size:
+  #number of iterations
+  workoutWithDumbbells: 1
+  #number of exercises in one workout
+  stretchingWorkout: 7
+  weightFree: 7
+  pushUps: 5
+  absWorkout: 7
+
+exercise_type_catalog_size:
+  biceps: 7
+  triceps: 5
+  chest: 5
+  back: 5
+  shoulders: 10
+  legs: 9
+  stretching: 41
+  weightFree: 18
+  pushUps: 12
+  abs: 23
