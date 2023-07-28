@@ -1,9 +1,9 @@
 package ansk.development.repository;
 
+import ansk.development.configuration.ConfigRegistry;
 import ansk.development.repository.api.IWorkoutProcessRepository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Future;
 
 /**
@@ -14,9 +14,10 @@ import java.util.concurrent.Future;
 public class WorkoutProcessRepository implements IWorkoutProcessRepository {
 
     private static WorkoutProcessRepository workoutProcessRepository;
-    private final Map<String, Future<?>> RUNNING_PROCESSES = new HashMap<>();
+    private final RunningProcess runningProcess;
 
     private WorkoutProcessRepository() {
+        this.runningProcess = new RunningProcess(ConfigRegistry.props().forBot().getChatId());
     }
 
     public static WorkoutProcessRepository getRepository() {
@@ -29,26 +30,54 @@ public class WorkoutProcessRepository implements IWorkoutProcessRepository {
 
     @Override
     public void addRunningProcess(String chatId, Future<?> process) {
-        if (this.RUNNING_PROCESSES.containsKey(chatId)) {
-            throw new IllegalStateException("There is already a running process for chat id: " + chatId);
-        }
-        this.RUNNING_PROCESSES.put(chatId, process);
+        runningProcess.addRunningProcess(chatId, process);
     }
 
     @Override
     public void removeRunningProcess(String chatId) {
-        this.RUNNING_PROCESSES.remove(chatId);
+        runningProcess.removeRunningProcess(chatId);
     }
 
     @Override
     public boolean hasRunningProcesses(String chatId) {
-        return RUNNING_PROCESSES.containsKey(chatId);
+        return runningProcess.hasRunningProcesses(chatId);
     }
 
     @Override
     public void interruptProcess(String chatId) {
-        if (RUNNING_PROCESSES.containsKey(chatId)) {
-            RUNNING_PROCESSES.get(chatId).cancel(true);
+        runningProcess.interruptRunningProcess(chatId);
+    }
+
+    private class RunningProcess {
+        private String chatId;
+        private Future<?> runningProcess;
+
+        public RunningProcess(String chatId) {
+            this.chatId = chatId;
+        }
+
+        public void addRunningProcess(String chatId, Future<?> scheduledFuture) {
+            if (!this.chatId.equals(chatId)) {
+                throw new IllegalStateException();
+            }
+            this.runningProcess = scheduledFuture;
+        }
+
+        public void removeRunningProcess(String chatId) {
+            if (!this.chatId.equals(chatId)) {
+                throw new IllegalStateException();
+            }
+            this.runningProcess = null;
+        }
+
+        public boolean hasRunningProcesses(String chatId) {
+            return this.chatId.equals(chatId) && Objects.nonNull(this.runningProcess);
+        }
+
+        public void interruptRunningProcess(String chatId) {
+            if (hasRunningProcesses(chatId)) {
+                this.runningProcess.cancel(true);
+            }
         }
     }
 }

@@ -1,9 +1,9 @@
 package ansk.development.repository;
 
+import ansk.development.configuration.ConfigRegistry;
 import ansk.development.repository.api.IScheduledJobsRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -14,8 +14,10 @@ import java.util.concurrent.ScheduledFuture;
 public class ScheduledJobsRepository implements IScheduledJobsRepository {
 
     private static ScheduledJobsRepository scheduledJobsRepository;
+    private final ScheduledJob scheduledJob;
 
     private ScheduledJobsRepository() {
+        this.scheduledJob = new ScheduledJob(ConfigRegistry.props().forBot().getChatId());
     }
 
     public static ScheduledJobsRepository getRepository() {
@@ -26,47 +28,45 @@ public class ScheduledJobsRepository implements IScheduledJobsRepository {
         return scheduledJobsRepository;
     }
 
-    private final List<ScheduledJob> SCHEDULED_JOBS_REGISTRY = new ArrayList<>();
-
     @Override
     public void addScheduledJobForUser(String chatId, ScheduledFuture<?> scheduledFuture) {
-        this.SCHEDULED_JOBS_REGISTRY.add(new ScheduledJob(chatId, scheduledFuture));
+        scheduledJob.addScheduledJob(chatId, scheduledFuture);
     }
 
     @Override
     public void removeScheduledJobForUser(String chatId) {
-        this.SCHEDULED_JOBS_REGISTRY.removeIf(scheduledJob -> {
-            if (scheduledJob.getChatId().equals(chatId)) {
-                scheduledJob.getScheduledFuture().cancel(true);
-                return true;
-            }
-            return false;
-        });
+        scheduledJob.removeScheduledJob(chatId);
     }
 
     @Override
     public boolean existsRunningJobForUser(String chatId) {
-        return this.SCHEDULED_JOBS_REGISTRY
-                .stream()
-                .filter(scheduledJob -> scheduledJob.getChatId().equals(chatId))
-                .anyMatch(scheduledJob -> !scheduledJob.getScheduledFuture().isDone());
+        return scheduledJob.existsRunningJobForUser(chatId);
     }
 
     private class ScheduledJob {
-        private final String chatId;
-        private final ScheduledFuture<?> scheduledFuture;
+        private String chatId;
+        private ScheduledFuture<?> scheduledFuture;
 
-        private ScheduledJob(String chatId, ScheduledFuture<?> scheduledFuture) {
+        public ScheduledJob(String chatId) {
             this.chatId = chatId;
+        }
+
+        public void addScheduledJob(String chatId, ScheduledFuture<?> scheduledFuture) {
+            if (!this.chatId.equals(chatId)) {
+                throw new IllegalStateException();
+            }
             this.scheduledFuture = scheduledFuture;
         }
 
-        public String getChatId() {
-            return chatId;
+        public void removeScheduledJob(String chatId) {
+            if (!this.chatId.equals(chatId)) {
+                throw new IllegalStateException();
+            }
+            this.scheduledFuture = null;
         }
 
-        public ScheduledFuture<?> getScheduledFuture() {
-            return scheduledFuture;
+        public boolean existsRunningJobForUser(String chatId) {
+            return this.chatId.equals(chatId) && Objects.nonNull(this.scheduledFuture);
         }
     }
 }

@@ -79,28 +79,31 @@ public class ScheduledJobsService implements IScheduledJobsService {
 
     private Runnable sendFitnessReminderRunnable() {
         return () -> {
-            for (String chatId : NotificationsRepository.getRepository().getAllChatIdsWithEnabledNotifications()) {
-                ScheduledFuture<?> fitnessReminderScheduler = createFitnessReminderScheduler(chatId);
-                ScheduledJobsRepository.getRepository().addScheduledJobForUser(chatId, fitnessReminderScheduler);
-                try {
-                    LOGGER.debug("Starting a reminder runnable from thread: {}. ChatID: {}. Date: {}", Thread.currentThread(), chatId, new Date());
-                    Thread.sleep(ConfigRegistry.props().forBot().getGroupIntervalDelayInMs());
-                    LOGGER.debug("Continuing to the next sender...");
-                } catch (InterruptedException e) {
-                    LOGGER.error("Unexpected error occurred while sending fitness reminders. ChatID: {}", chatId, e);
-                }
+            String notifiedChatId = NotificationsRepository.getRepository().getNotifiedChatId();
+            boolean areNotificationsEnabled = NotificationsRepository.getRepository().areNotificationsEnabled(notifiedChatId);
+            if (!areNotificationsEnabled) {
+                LOGGER.warn("Would like to send a fitness reminder for {} but he ignored notifications", notifiedChatId);
+                return;
+            }
+            ScheduledFuture<?> fitnessReminderScheduler = createFitnessReminderScheduler(notifiedChatId);
+            ScheduledJobsRepository.getRepository().addScheduledJobForUser(notifiedChatId, fitnessReminderScheduler);
+            try {
+                LOGGER.debug("Starting a reminder runnable from thread: {}. ChatID: {}. Date: {}", Thread.currentThread(), notifiedChatId, new Date());
+                Thread.sleep(ConfigRegistry.props().forBot().getGroupIntervalDelayInMs());
+                LOGGER.debug("Continuing to the next sender...");
+            } catch (InterruptedException e) {
+                LOGGER.error("Unexpected error occurred while sending fitness reminders. ChatID: {}", notifiedChatId, e);
             }
         };
     }
 
     private void sendOnStartUpMessage() {
-        for (String chatId : NotificationsRepository.getRepository().getAllChatIds()) {
-            MessageMethod messageMethod = new MessageMethod(chatId, ConfigRegistry.props().forNotification().getOnStartup());
-            try {
-                FitnessBotSender.getSender().sendMessage(messageMethod.getMessage());
-            } catch (FitnessBotOperationException e) {
-                LOGGER.error("Unexpected error occurred while sending a greeting message. ChatID: {}", chatId);
-            }
+        String chatId = NotificationsRepository.getRepository().getNotifiedChatId();
+        MessageMethod messageMethod = new MessageMethod(chatId, ConfigRegistry.props().forNotification().getOnStartup());
+        try {
+            FitnessBotSender.getSender().sendMessage(messageMethod.getMessage());
+        } catch (FitnessBotOperationException e) {
+            LOGGER.error("Unexpected error occurred while sending a greeting message. ChatID: {}", chatId);
         }
     }
 

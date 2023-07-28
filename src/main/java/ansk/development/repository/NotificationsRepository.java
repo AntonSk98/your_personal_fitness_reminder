@@ -3,9 +3,6 @@ package ansk.development.repository;
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.repository.api.INotificationsRepository;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * Implementation of {@link INotificationsRepository}.
  *
@@ -13,16 +10,12 @@ import java.util.stream.Collectors;
  */
 public class NotificationsRepository implements INotificationsRepository {
 
-    private static final List<Notification> NOTIFICATION_REGISTRY = ConfigRegistry
-            .props()
-            .forBot()
-            .getAllowedChatIds()
-            .stream()
-            .map(chatId -> new Notification(chatId, true))
-            .collect(Collectors.toList());
+    private final Notification notification;
+
     private static NotificationsRepository notificationsRepository;
 
     private NotificationsRepository() {
+        this.notification = new Notification(ConfigRegistry.props().forBot().getChatId(), true);
     }
 
     public static NotificationsRepository getRepository() {
@@ -33,33 +26,16 @@ public class NotificationsRepository implements INotificationsRepository {
         return notificationsRepository;
     }
 
-    private static void changeNotificationStatusForUser(String chatId, boolean enabled) {
-        NOTIFICATION_REGISTRY
-                .stream()
-                .filter(notification -> notification.getChatId().equals(chatId))
-                .forEach(notification -> notification.setNotificationsEnabled(enabled));
+    private void changeNotificationStatusForUser(String chatId, boolean enabled) {
+        notification.setNotificationsEnabled(chatId, enabled);
     }
 
-    public List<String> getAllChatIds() {
-        return NOTIFICATION_REGISTRY.stream().map(Notification::getChatId).collect(Collectors.toList());
-    }
-
-    public List<String> getAllChatIdsWithEnabledNotifications() {
-        return NOTIFICATION_REGISTRY
-                .stream()
-                .filter(Notification::isNotificationsEnabled)
-                .map(Notification::getChatId)
-                .collect(Collectors.toList());
+    public String getNotifiedChatId() {
+        return notification.getChatId();
     }
 
     public boolean areNotificationsEnabled(String chatId) {
-        return NOTIFICATION_REGISTRY
-                .stream()
-                .filter(notification -> notification.getChatId().equals(chatId))
-                .filter(Notification::isNotificationsEnabled)
-                .map(Notification::isNotificationsEnabled)
-                .findFirst()
-                .orElse(false);
+        return notification.areNotificationsEnabled(chatId);
     }
 
     public void enableNotificationsForUser(String chatId) {
@@ -83,11 +59,17 @@ public class NotificationsRepository implements INotificationsRepository {
             return chatId;
         }
 
-        public boolean isNotificationsEnabled() {
-            return notificationsEnabled;
+        public boolean areNotificationsEnabled(String chatId) {
+            if (!this.chatId.equals(chatId)) {
+                throw new IllegalStateException(String.format("Unauthorized user %s is attending to get notification info for %s", chatId, this.chatId));
+            }
+            return this.notificationsEnabled;
         }
 
-        public void setNotificationsEnabled(boolean notificationsEnabled) {
+        public void setNotificationsEnabled(String chatId, boolean notificationsEnabled) {
+            if (!this.chatId.equals(chatId)) {
+                throw new IllegalStateException(String.format("Unauthorized user %s is attending to change notification policy for %s", chatId, this.chatId));
+            }
             this.notificationsEnabled = notificationsEnabled;
         }
     }

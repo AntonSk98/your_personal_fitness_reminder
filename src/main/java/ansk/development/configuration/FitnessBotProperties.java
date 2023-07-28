@@ -14,9 +14,8 @@ public class FitnessBotProperties {
     private boolean ignoreOldEvents;
     private int sendExerciseDelayInMs;
     private int groupIntervalDelayInMs;
-    private String rootUsername;
-    private String rootChatId;
-    private List<String> allowedChatIds;
+    private String creator;
+    private String chatId;
 
     public String getUsername() {
         return username;
@@ -66,27 +65,19 @@ public class FitnessBotProperties {
         this.groupIntervalDelayInMs = groupIntervalDelayInMs;
     }
 
-    public String getRootUsername() {
-        return rootUsername;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setRootUsername(String rootUsername) {
-        this.rootUsername = rootUsername;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
-    public String getRootChatId() {
-        return rootChatId;
+    public String getChatId() {
+        return chatId;
     }
 
-    public void setRootChatId(String rootChatId) {
-        this.rootChatId = rootChatId;
-    }
-
-    public List<String> getAllowedChatIds() {
-        return allowedChatIds;
-    }
-
-    public void setAllowedChatIds(List<String> allowedChatIds) {
-        this.allowedChatIds = allowedChatIds;
+    public void setChatId(String rootChatId) {
+        this.chatId = rootChatId;
     }
 }

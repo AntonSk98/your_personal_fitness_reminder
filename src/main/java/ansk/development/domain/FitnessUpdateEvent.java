@@ -112,8 +112,8 @@ public class FitnessUpdateEvent {
         return update.hasMessage() && Objects.nonNull(update.getMessage().getChat()) && ConfigRegistry
                 .props()
                 .forBot()
-                .getAllowedChatIds()
-                .contains(this.getChatId());
+                .getChatId()
+                .equals(this.getChatId());
     }
 
     private FitnessBotCommands toFitnessBotCommand() {

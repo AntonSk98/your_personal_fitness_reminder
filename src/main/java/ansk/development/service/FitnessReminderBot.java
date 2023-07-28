@@ -109,7 +109,6 @@ public class FitnessReminderBot extends TelegramLongPollingBot {
     private EventHandler initializeEventHandlerChain() {
         return EventHandlerBuilder
                 .initializeChain()
-                .withResetTimerHandler()
                 .withAbsWorkoutHandler()
                 .withPushUpsWorkout()
                 .withWeightFreeWorkoutHandler()
@@ -119,6 +118,7 @@ public class FitnessReminderBot extends TelegramLongPollingBot {
                 .withAdaptableNotificationPolicyHandler()
                 .onlyWithEnabledNotifications()
                 .withStoppableWorkoutHandler()
+                .withResetTimerHandler()
                 .onlyWithTodayEvents()
                 .withUnknownCommandHandler()
                 .withUnknownUserHandler()

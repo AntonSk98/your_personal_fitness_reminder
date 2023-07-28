@@ -33,7 +33,7 @@ public class UnknownUserHandler extends AbstractEventHandler {
 
     private void handleEventFromUnknownUser(String chatId, String username) {
         final String messageToUnknownUser = ConfigRegistry.props().forNotification().getToUnknownUser();
-        final String rootChatId = ConfigRegistry.props().forBot().getRootChatId();
+        final String rootChatId = ConfigRegistry.props().forBot().getChatId();
         String messageAboutUnknownUser = String.format("%s {%s:%s}", ConfigRegistry
                 .props()
                 .forNotification()

@@ -8,7 +8,7 @@ import java.util.List;
  * @author Anton Skripin
  */
 public interface INotificationsRepository {
-    List<String> getAllChatIdsWithEnabledNotifications();
+    String getNotifiedChatId();
     boolean areNotificationsEnabled(String chatId);
     void enableNotificationsForUser(String chatId);
     void disableNotificationsForUser(String chatId);
