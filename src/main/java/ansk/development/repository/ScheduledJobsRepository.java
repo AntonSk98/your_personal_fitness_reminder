@@ -62,6 +62,9 @@ public class ScheduledJobsRepository implements IScheduledJobsRepository {
             if (!this.chatId.equals(chatId)) {
                 throw new IllegalStateException();
             }
+            if (this.scheduledFuture != null) {
+                this.scheduledFuture.cancel(true);
+            }
             this.scheduledFuture = null;
         }
 
