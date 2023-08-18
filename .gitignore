@@ -1,5 +1,6 @@
 # Project exclude paths
 /target/
+/src/main/resources/
 .idea
 *key.pem
-*properties.yml
+*docker-compose.yml
