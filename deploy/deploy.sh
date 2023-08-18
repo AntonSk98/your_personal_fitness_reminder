@@ -3,7 +3,8 @@
 dir="C:/ansk/github/your_personal_fitness_reminder"
 deploy_dir="${dir}/deploy"
 target_dir="${dir}/target"
-jar_name="your_personal_fitness_reminder-1.1.jar"
+version="1.3"
+jar_name="your_personal_fitness_reminder-${version}.jar"
 
 target_remote_dir="/home/ec2-user/your_personal_fitness_reminder"
 
@@ -26,7 +27,7 @@ ssh -i $private_key_file $remote_vm "mkdir -p $target_remote_dir/exercises"
 
 echo "Copying files to the remote server"
 scp -i $private_key_file properties.yml $remote_vm:$target_remote_dir
-scp -i $private_key_file Dockerfile $remote_vm:$target_remote_dir
+scp -i $private_key_file docker-compose.yml $remote_vm:$target_remote_dir
 scp -i $private_key_file $jar_name $remote_vm:$target_remote_dir
 scp -i $private_key_file -r exercises $remote_vm:$target_remote_dir
 echo "Successfully copied files to the remote server"
@@ -51,12 +52,10 @@ ssh -i $private_key_file $remote_vm << EOF
 		  else
 		    echo "Docker daemon is running."
 	fi
-	echo "Stopping existing container"
-	docker stop fitness-bot
-	docker rm fitness-bot
-	echo "Building new image..."
-	docker build --no-cache -t your-personal-fitness-reminder .
-	docker run -id --name fitness-bot your-personal-fitness-reminder
+	echo "Stopping existing cluster"
+	docker-compose down
+	echo "Building new cluster..."
+	docker-compose up -d
 	exit
 EOF
-echo "Successfully redeployed the application!"
+echo "Successfully redeployed the cluster!"
