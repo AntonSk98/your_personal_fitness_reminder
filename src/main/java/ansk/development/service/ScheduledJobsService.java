@@ -60,9 +60,9 @@ public class ScheduledJobsService implements IScheduledJobsService {
 
     @Override
     public void sendFitnessReminderSchedule() {
-        Runnable fitnessReminderRunnable = sendFitnessReminderRunnable();
-        Thread fitnessReminderThread = new Thread(fitnessReminderRunnable);
-        fitnessReminderThread.start();
+        String notifiedChatId = NotificationsRepository.getRepository().getNotifiedChatId();
+        ScheduledFuture<?> fitnessReminderScheduler = createFitnessReminderScheduler(notifiedChatId);
+        ScheduledJobsRepository.getRepository().addScheduledJobForUser(notifiedChatId, fitnessReminderScheduler);
     }
 
     @Override
@@ -75,26 +75,6 @@ public class ScheduledJobsService implements IScheduledJobsService {
             LOGGER.error("While resetting the timer an unexpected error occurred. ChatID: {}", chatId, e);
             return false;
         }
-    }
-
-    private Runnable sendFitnessReminderRunnable() {
-        return () -> {
-            String notifiedChatId = NotificationsRepository.getRepository().getNotifiedChatId();
-            boolean areNotificationsEnabled = NotificationsRepository.getRepository().areNotificationsEnabled(notifiedChatId);
-            if (!areNotificationsEnabled) {
-                LOGGER.warn("Would like to send a fitness reminder for {} but he ignored notifications", notifiedChatId);
-                return;
-            }
-            ScheduledFuture<?> fitnessReminderScheduler = createFitnessReminderScheduler(notifiedChatId);
-            ScheduledJobsRepository.getRepository().addScheduledJobForUser(notifiedChatId, fitnessReminderScheduler);
-            try {
-                LOGGER.debug("Starting a reminder runnable from thread: {}. ChatID: {}. Date: {}", Thread.currentThread(), notifiedChatId, new Date());
-                Thread.sleep(ConfigRegistry.props().forBot().getGroupIntervalDelayInMs());
-                LOGGER.debug("Continuing to the next sender...");
-            } catch (InterruptedException e) {
-                LOGGER.error("Unexpected error occurred while sending fitness reminders. ChatID: {}", notifiedChatId, e);
-            }
-        };
     }
 
     private void sendOnStartUpMessage() {
@@ -110,7 +90,16 @@ public class ScheduledJobsService implements IScheduledJobsService {
     private ScheduledFuture<?> createFitnessReminderScheduler(String chatId) {
         LOGGER.debug("Sending a fitness reminder to {}. Date: {}", chatId, new Date());
         return TelegramFitnessExecutorService.scheduleWithFixedDelay(
-                () -> sendFitnessReminder(chatId),
+                () -> {
+                    boolean areNotificationsEnabled = NotificationsRepository
+                            .getRepository()
+                            .areNotificationsEnabled(chatId);
+                    if (!areNotificationsEnabled) {
+                        LOGGER.warn("No fitness reminder sent for {}. Notifications are disabled!", chatId);
+                        return;
+                    }
+                    sendFitnessReminder(chatId);
+                },
                 ConfigRegistry.props().forScheduled().getSendWorkout().getInitialDelay(),
                 ConfigRegistry.props().forScheduled().getSendWorkout().getInterval(),
                 ConfigRegistry.props().forScheduled().getSendWorkout().getTimeUnit());
