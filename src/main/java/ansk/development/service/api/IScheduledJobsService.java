@@ -1,7 +1,5 @@
 package ansk.development.service.api;
 
-import ansk.development.domain.FitnessBotCommands;
-
 /**
  * Provides methods to manage scheduled jobs.
  *
