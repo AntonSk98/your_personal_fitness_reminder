@@ -1,11 +1,13 @@
-package ansk.development.service;
+package ansk.development.service.methods;
 
 import ansk.development.domain.ExerciseType;
 import ansk.development.domain.ExerciseTypeToQuantity;
 import org.apache.commons.lang3.RandomUtils;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * Encapsulates the functionality to access different exercise animations.
