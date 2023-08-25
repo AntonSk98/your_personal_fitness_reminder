@@ -1,4 +1,4 @@
-package ansk.development.service.methods;
+package ansk.development.service.impl;
 
 import ansk.development.service.api.ITelegramFitnessExecutorService;
 
