@@ -1,12 +1,14 @@
-package ansk.development.service;
+package ansk.development.service.impl;
 
+import ansk.development.bot.FitnessReminderBot;
 import ansk.development.configuration.ConfigRegistry;
-import ansk.development.configuration.NotificationsProperties;
+import ansk.development.configuration.notification_config.NotificationsProperties;
 import ansk.development.exception.FitnessBotOperationException;
 import ansk.development.repository.WorkoutProcessRepository;
 import ansk.development.repository.api.IWorkoutProcessRepository;
 import ansk.development.service.api.IFitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
+import ansk.development.service.methods.TelegramFitnessExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
@@ -74,14 +76,14 @@ public class FitnessBotSender implements IFitnessBotSender {
 
     @Override
     public void sendWorkoutAsRegisteredProcess(String chatId, SendAnimation... exercises) {
-        registerProcess(chatId, TelegramFitnessExecutorService.executeAsync(() -> {
+        registerProcess(chatId, TelegramFitnessExecutorService.executorService().executeAsync(() -> {
             for (SendAnimation exercise : exercises) {
                 try {
                     sendWorkoutExercise(exercise);
-                    Thread.sleep(ConfigRegistry.props().forBot().getSendExerciseDelayInMs());
+                    Thread.sleep(ConfigRegistry.props().botProperties().getSendExerciseDelayInMs());
                 } catch (FitnessBotOperationException e) {
-                     LOGGER.error("Unexpected error occurred while sending workout. ChatID: {}", chatId);
-                     break;
+                    LOGGER.error("Unexpected error occurred while sending workout. ChatID: {}", chatId);
+                    break;
                 } catch (InterruptedException e) {
                     LOGGER.warn("Running process was interrupted by another process");
                     break;
@@ -99,8 +101,8 @@ public class FitnessBotSender implements IFitnessBotSender {
                 .ofNullable(responseParameters)
                 .map(ResponseParameters::getRetryAfter)
                 .map(String::valueOf)
-                .orElse(ConfigRegistry.props().forNotification().getDefaultSecondsPlaceholder());
-        String templateNotification = ConfigRegistry.props().forNotification().getTooManyRequest();
+                .orElse(ConfigRegistry.props().notifications().getDefaultSecondsPlaceholder());
+        String templateNotification = ConfigRegistry.props().notifications().getTooManyRequest();
         MessageMethod messageMethod = new MessageMethod(chatId,
                 NotificationsProperties.customizeTemplate(templateNotification, retryAfterSeconds));
         this.sendMessages(messageMethod.getMessage());
