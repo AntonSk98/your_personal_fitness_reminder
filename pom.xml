@@ -15,10 +15,11 @@
         <telegrambots.version>6.7.0</telegrambots.version>
         <commons-lang.version>3.12.0</commons-lang.version>
         <snakeyaml.version>2.0</snakeyaml.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-assembly-plugin.version>3.5.0</maven-assembly-plugin.version>
-        <maven-compiler-source.version>14</maven-compiler-source.version>
-        <maven-compiler-target.version>14</maven-compiler-target.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
+        <jackson-datatype-jsr310.version>2.14.3</jackson-datatype-jsr310.version>
+        <maven-compiler-source.version>17</maven-compiler-source.version>
+        <maven-compiler-target.version>17</maven-compiler-target.version>
     </properties>
 
     <dependencies>
