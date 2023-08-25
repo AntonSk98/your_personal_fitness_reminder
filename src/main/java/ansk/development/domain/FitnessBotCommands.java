@@ -15,15 +15,28 @@ public enum FitnessBotCommands {
     RESET_TIMER("/reset_notifications_timer"),
     PUSH_UPS("/push_ups"),
     ABS("/abs"),
-    STOP_WORKOUT("/stop_workout");
+    STOP_WORKOUT("/stop_workout"),
+
+    SET_TIMEZONE("/set_timezone", 1);
 
     private final String command;
+    private final int numberOfParameters;
 
     FitnessBotCommands(String command) {
         this.command = command;
+        this.numberOfParameters = 0;
+    }
+
+    FitnessBotCommands(String command, int numberOfParameters) {
+        this.command = command;
+        this.numberOfParameters = numberOfParameters;
     }
 
     public String command() {
         return command;
+    }
+
+    public int numberOfParameters() {
+        return this.numberOfParameters;
     }
 }

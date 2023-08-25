@@ -2,6 +2,7 @@ package ansk.development.domain;
 
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.exception.UnknownBotCommandException;
+import org.apache.commons.lang3.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -9,9 +10,11 @@ import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static ansk.development.domain.FitnessBotCommands.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -23,6 +26,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * @author Anton Skripin
  */
 public class FitnessUpdateEvent {
+
+    private static final String PARAMETER_SYMBOL = "$";
     private final Update update;
 
     public FitnessUpdateEvent(Update update) {
@@ -94,6 +99,12 @@ public class FitnessUpdateEvent {
         return !isKnownCommand();
     }
 
+    public Optional<String[]> getParameters() {
+        return Optional.ofNullable(
+                StringUtils.substringsBetween(this.update.getMessage().getText(), PARAMETER_SYMBOL, PARAMETER_SYMBOL)
+        );
+    }
+
     private boolean isKnownCommand() {
         String message = update.getMessage().getText();
         for (FitnessBotCommands botEvent : values()) {
@@ -111,18 +122,28 @@ public class FitnessUpdateEvent {
     private boolean isFromAllowedUser() {
         return update.hasMessage() && Objects.nonNull(update.getMessage().getChat()) && ConfigRegistry
                 .props()
-                .botCredentials()
+                .botProperties()
                 .getChatId()
                 .equals(this.getChatId());
     }
 
     private FitnessBotCommands toFitnessBotCommand() {
         String message = update.getMessage().getText();
-        for (FitnessBotCommands botEvent : values()) {
-            if (botEvent.command().equals(message)) {
-                return botEvent;
-            }
-        }
-        throw new UnknownBotCommandException();
+        return Arrays
+                .stream(values()).
+                filter(matchedCommandWithoutParameters(message).or(matchedCommandWithParameters(message)))
+                .findFirst()
+                .orElseThrow(UnknownBotCommandException::new);
+    }
+
+    private Predicate<FitnessBotCommands> matchedCommandWithoutParameters(String command) {
+        return fitnessBotCommands -> fitnessBotCommands.command().equals(command);
+    }
+
+    private Predicate<FitnessBotCommands> matchedCommandWithParameters(String command) {
+        return fitnessBotCommands -> fitnessBotCommands.numberOfParameters() > 0
+                && command.startsWith(fitnessBotCommands.command())
+                && getParameters().isPresent()
+                && getParameters().get().length == fitnessBotCommands.numberOfParameters();
     }
 }
