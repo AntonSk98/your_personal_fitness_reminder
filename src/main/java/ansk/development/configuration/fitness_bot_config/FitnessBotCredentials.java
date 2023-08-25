@@ -1,13 +1,13 @@
-package ansk.development.configuration;
+package ansk.development.configuration.fitness_bot_config;
 
 import java.util.Objects;
 
 /**
- * Holds sensitive part loaded from the environment variables about the owner of a bot and the token to access it.
+ * Holds sensitive part loaded from the environment variables required for the bot.
  *
  * @author Anton Skripin
  */
-public class BotCredentials {
+public class FitnessBotCredentials {
 
     private static final String PROPERTIES_CHAT_ID_ENV_VARIABLE_NAME = "CHAT_ID";
     private static final String PROPERTIES_TOKEN_ENV_VARIABLE_NAME = "TOKEN";
@@ -17,7 +17,7 @@ public class BotCredentials {
     private final String token;
     private final String username;
 
-    public BotCredentials() {
+    public FitnessBotCredentials() {
         this.chatId = System.getenv(PROPERTIES_CHAT_ID_ENV_VARIABLE_NAME);
         this.token = System.getenv(PROPERTIES_TOKEN_ENV_VARIABLE_NAME);
         this.username = System.getenv(PROPERTIES_TOKEN_USERNAME);

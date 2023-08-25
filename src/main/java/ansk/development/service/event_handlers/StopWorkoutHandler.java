@@ -5,7 +5,7 @@ import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
 import ansk.development.repository.WorkoutProcessRepository;
 import ansk.development.repository.api.IWorkoutProcessRepository;
-import ansk.development.service.FitnessBotSender;
+import ansk.development.service.impl.FitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class StopWorkoutHandler extends AbstractEventHandler {
         if (processRepository.hasRunningProcesses(chatId)) {
             MessageMethod messageMethod = new MessageMethod(chatId, ConfigRegistry
                     .props()
-                    .forNotification()
+                    .notifications()
                     .getStopWorkout());
             processRepository.interruptProcess(chatId);
             try {
@@ -50,7 +50,7 @@ public class StopWorkoutHandler extends AbstractEventHandler {
 
         MessageMethod messageMethod = new MessageMethod(chatId, ConfigRegistry
                 .props()
-                .forNotification()
+                .notifications()
                 .getNoOngoingWorkout());
 
         try {

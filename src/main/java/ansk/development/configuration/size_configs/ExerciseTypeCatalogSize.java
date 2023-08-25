@@ -1,4 +1,4 @@
-package ansk.development.configuration;
+package ansk.development.configuration.size_configs;
 
 /**
  * Configuration property class that maps each type of exercise to its number available for workout.

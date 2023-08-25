@@ -21,7 +21,7 @@ public class WithOnlyTodayEventsFilter extends AbstractEventHandler {
 
     @Override
     public void handle(FitnessUpdateEvent updateEvent) {
-        if (ConfigRegistry.props().forBot().isIgnoreOldEvents() && updateEvent.isEventFromPreviousDays()) {
+        if (ConfigRegistry.props().botProperties().isIgnoreOldEvents() && updateEvent.isEventFromPreviousDays()) {
             LOGGER.warn("Received an old event. It will be ignored. Event: {}", updateEvent.getUpdate());
             return;
         }

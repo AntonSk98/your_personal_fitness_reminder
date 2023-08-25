@@ -5,7 +5,7 @@ import ansk.development.domain.FitnessBotCommands;
 import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
 import ansk.development.repository.NotificationsRepository;
-import ansk.development.service.FitnessBotSender;
+import ansk.development.service.impl.FitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,13 +64,13 @@ public class ChangeBotNotificationPolicyHandler extends AbstractEventHandler {
         if (ENABLE_FITNESS_REMINDERS.equals(event)) {
             final String enableNotificationsMessage = ConfigRegistry
                     .props()
-                    .forNotification()
+                    .notifications()
                     .getEnabledNotifications();
             return new MessageMethod(chatId, enableNotificationsMessage).getMessage();
         } else {
             final String disableNotificationsMessage = ConfigRegistry
                     .props()
-                    .forNotification()
+                    .notifications()
                     .getDisabledNotifications();
             return new MessageMethod(chatId, disableNotificationsMessage).getMessage();
         }

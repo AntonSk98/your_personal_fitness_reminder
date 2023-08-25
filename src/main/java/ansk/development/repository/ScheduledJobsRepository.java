@@ -17,7 +17,7 @@ public class ScheduledJobsRepository implements IScheduledJobsRepository {
     private final ScheduledJob scheduledJob;
 
     private ScheduledJobsRepository() {
-        this.scheduledJob = new ScheduledJob(ConfigRegistry.props().botCredentials().getChatId());
+        this.scheduledJob = new ScheduledJob(ConfigRegistry.props().botProperties().getChatId());
     }
 
     public static ScheduledJobsRepository getRepository() {

@@ -3,7 +3,7 @@ package ansk.development.service.event_handlers;
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
-import ansk.development.service.FitnessBotSender;
+import ansk.development.service.impl.FitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +32,11 @@ public class UnknownUserHandler extends AbstractEventHandler {
     }
 
     private void handleEventFromUnknownUser(String chatId, String username) {
-        final String messageToUnknownUser = ConfigRegistry.props().forNotification().getToUnknownUser();
-        final String rootChatId = ConfigRegistry.props().botCredentials().getChatId();
+        final String messageToUnknownUser = ConfigRegistry.props().notifications().getToUnknownUser();
+        final String rootChatId = ConfigRegistry.props().botProperties().getChatId();
         String messageAboutUnknownUser = String.format("%s {%s:%s}", ConfigRegistry
                 .props()
-                .forNotification()
+                .notifications()
                 .getAboutUnknownUser(), username, chatId);
         MessageMethod toRoot = new MessageMethod(rootChatId, messageAboutUnknownUser);
         MessageMethod toUnknownUser = new MessageMethod(chatId, messageToUnknownUser);

@@ -1,6 +1,4 @@
-package ansk.development.configuration;
-
-import java.util.List;
+package ansk.development.configuration.fitness_bot_config;
 
 /**
  * Core configuration property file with necessary props to start this Telegram bot.
@@ -11,8 +9,12 @@ public class FitnessBotProperties {
     private boolean onStartupNotificationsEnabled;
     private boolean ignoreOldEvents;
     private int sendExerciseDelayInMs;
-    private int groupIntervalDelayInMs;
     private String creator;
+    private String timezone;
+
+    private FitnessBotCredentials fitnessBotCredentials;
+
+
     public boolean isOnStartupNotificationsEnabled() {
         return onStartupNotificationsEnabled;
     }
@@ -37,19 +39,35 @@ public class FitnessBotProperties {
         this.sendExerciseDelayInMs = sendExerciseDelayInMs;
     }
 
-    public int getGroupIntervalDelayInMs() {
-        return groupIntervalDelayInMs;
-    }
-
-    public void setGroupIntervalDelayInMs(int groupIntervalDelayInMs) {
-        this.groupIntervalDelayInMs = groupIntervalDelayInMs;
-    }
-
     public String getCreator() {
         return creator;
     }
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
+    public String getChatId() {
+        return fitnessBotCredentials.getChatId();
+    }
+
+    public String getToken() {
+        return fitnessBotCredentials.getToken();
+    }
+
+    public String getUsername() {
+        return fitnessBotCredentials.getUsername();
+    }
+
+    public void setFitnessBotCredentials(FitnessBotCredentials fitnessBotCredentials) {
+        this.fitnessBotCredentials = fitnessBotCredentials;
     }
 }

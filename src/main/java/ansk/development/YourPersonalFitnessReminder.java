@@ -1,6 +1,6 @@
 package ansk.development;
 
-import ansk.development.service.FitnessReminderBot;
+import ansk.development.bot.FitnessReminderBot;
 
 /**
  * An entry-point class that launches the bot.

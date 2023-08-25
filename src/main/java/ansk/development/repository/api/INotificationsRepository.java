@@ -1,7 +1,5 @@
 package ansk.development.repository.api;
 
-import java.util.List;
-
 /**
  * Collects the status of notifications for every user.
  *
@@ -9,7 +7,10 @@ import java.util.List;
  */
 public interface INotificationsRepository {
     String getNotifiedChatId();
+
     boolean areNotificationsEnabled(String chatId);
+
     void enableNotificationsForUser(String chatId);
+
     void disableNotificationsForUser(String chatId);
 }

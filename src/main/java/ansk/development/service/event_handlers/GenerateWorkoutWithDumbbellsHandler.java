@@ -3,7 +3,7 @@ package ansk.development.service.event_handlers;
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
-import ansk.development.service.FitnessBotSender;
+import ansk.development.service.impl.FitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
 import ansk.development.service.methods.WorkoutMethod;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class GenerateWorkoutWithDumbbellsHandler extends AbstractEventHandler {
     }
 
     private void generateWorkoutWithDumbbells(String chatId) {
-        MessageMethod message = new MessageMethod(chatId, ConfigRegistry.props().forNotification().getWorkoutWithDumbbells());
+        MessageMethod message = new MessageMethod(chatId, ConfigRegistry.props().notifications().getWorkoutWithDumbbells());
         WorkoutMethod workoutWithDumbbells = WorkoutMethod.generateWorkout(chatId).withDumbbells();
         try {
             FitnessBotSender.getSender().sendMessages(message.getMessage());

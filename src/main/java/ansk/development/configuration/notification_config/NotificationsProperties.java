@@ -1,4 +1,4 @@
-package ansk.development.configuration;
+package ansk.development.configuration.notification_config;
 
 /**
  * Notification-related properties to inform user about certain events.

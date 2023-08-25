@@ -1,4 +1,4 @@
-package ansk.development.configuration;
+package ansk.development.configuration.size_configs;
 
 /**
  * Properties that configure the number of exercises in every available workout type.

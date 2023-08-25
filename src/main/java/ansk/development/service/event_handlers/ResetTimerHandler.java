@@ -3,8 +3,8 @@ package ansk.development.service.event_handlers;
 import ansk.development.configuration.ConfigRegistry;
 import ansk.development.domain.FitnessUpdateEvent;
 import ansk.development.exception.FitnessBotOperationException;
-import ansk.development.service.FitnessBotSender;
-import ansk.development.service.ScheduledJobsService;
+import ansk.development.service.impl.FitnessBotSender;
+import ansk.development.service.impl.ScheduledJobsService;
 import ansk.development.service.methods.MessageMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +33,8 @@ public class ResetTimerHandler extends AbstractEventHandler {
 
     private void resetTimer(String chatId) {
         boolean isTimerReset = ScheduledJobsService.scheduledJobsService().resetFitnessReminderTimer(chatId);
-        final String success = ConfigRegistry.props().forNotification().getSuccessfullyResetTimer();
-        final String fail = ConfigRegistry.props().forNotification().getFailedToResetTimer();
+        final String success = ConfigRegistry.props().notifications().getSuccessfullyResetTimer();
+        final String fail = ConfigRegistry.props().notifications().getFailedToResetTimer();
         MessageMethod messageMethod = new MessageMethod(chatId, isTimerReset ? success : fail);
         try {
             FitnessBotSender.getSender().sendMessage(messageMethod.getMessage());

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static ansk.development.service.ExerciseAccessManager.getRandomExercise;
+import static ansk.development.service.methods.ExerciseAccessManager.getRandomExercise;
 
 /**
  * Class that generates a set of exercises for a client.

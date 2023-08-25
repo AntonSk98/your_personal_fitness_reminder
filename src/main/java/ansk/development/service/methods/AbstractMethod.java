@@ -1,7 +1,7 @@
 package ansk.development.service.methods;
 
 /**
- * Common method class that creates a method that is to be sent to a client.
+ * Common method class that creates a method that is to be sent to a user.
  *
  * @author Anton SKripin
  */
