@@ -8,7 +8,6 @@ import ansk.development.repository.WorkoutProcessRepository;
 import ansk.development.repository.api.IWorkoutProcessRepository;
 import ansk.development.service.api.IFitnessBotSender;
 import ansk.development.service.methods.MessageMethod;
-import ansk.development.service.methods.TelegramFitnessExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;

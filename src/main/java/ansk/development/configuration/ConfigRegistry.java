@@ -4,8 +4,8 @@ import ansk.development.configuration.client_commands_config.ClientConfiguration
 import ansk.development.configuration.fitness_bot_config.FitnessBotCredentials;
 import ansk.development.configuration.fitness_bot_config.FitnessBotProperties;
 import ansk.development.configuration.notification_config.NotificationsProperties;
+import ansk.development.configuration.path_config.PathProperties;
 import ansk.development.configuration.scheduled_jobs_config.ScheduledJobsProperties;
-import ansk.development.configuration.size_configs.ExerciseTypeCatalogSize;
 import ansk.development.configuration.size_configs.WorkoutSizeProperties;
 import ansk.development.configuration.system_config.ObjectMapperConfiguration;
 import org.yaml.snakeyaml.Yaml;
@@ -30,20 +30,20 @@ public class ConfigRegistry {
     private final NotificationsProperties notificationsProperties;
     private final WorkoutSizeProperties workoutSizeProperties;
     private final ScheduledJobsProperties scheduledJobsProperties;
-    private final ExerciseTypeCatalogSize exerciseTypeCatalogSize;
+    private final PathProperties pathProperties;
     private final ClientConfigurationCommands clientConfigurationCommands;
 
     private ConfigRegistry(FitnessBotProperties fitnessBotProperties,
                            NotificationsProperties notificationsProperties,
                            WorkoutSizeProperties workoutSizeProperties,
                            ScheduledJobsProperties scheduledJobsProperties,
-                           ExerciseTypeCatalogSize exerciseTypeCatalogSize,
+                           PathProperties pathProperties,
                            ClientConfigurationCommands clientConfigurationCommands) {
         this.fitnessBotProperties = fitnessBotProperties;
         this.notificationsProperties = notificationsProperties;
         this.workoutSizeProperties = workoutSizeProperties;
         this.scheduledJobsProperties = scheduledJobsProperties;
-        this.exerciseTypeCatalogSize = exerciseTypeCatalogSize;
+        this.pathProperties = pathProperties;
         this.clientConfigurationCommands = clientConfigurationCommands;
     }
 
@@ -54,14 +54,14 @@ public class ConfigRegistry {
                     initializeNotificationProperties(),
                     initializeWorkoutSizeProperties(),
                     initializeScheduledJobsProperties(),
-                    initializeTypeCatalogSize(),
+                    initializePathProperties(),
                     initializeClientConfigurationProperties());
         }
         return configRegistry;
     }
 
-    private static ExerciseTypeCatalogSize initializeTypeCatalogSize() {
-        return toObjectProperty("exercise_type_catalog_size", ExerciseTypeCatalogSize.class);
+    private static PathProperties initializePathProperties() {
+        return new PathProperties();
     }
 
     private static ScheduledJobsProperties initializeScheduledJobsProperties() {
@@ -113,7 +113,9 @@ public class ConfigRegistry {
         return workoutSizeProperties;
     }
 
-    public ExerciseTypeCatalogSize exerciseSizes() {return exerciseTypeCatalogSize;}
+    public PathProperties pathProperties() {
+        return pathProperties;
+    }
 
     public ClientConfigurationCommands clientConfigurationCommands() {
         return clientConfigurationCommands;

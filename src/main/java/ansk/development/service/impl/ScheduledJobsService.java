@@ -8,7 +8,6 @@ import ansk.development.repository.ScheduledJobsRepository;
 import ansk.development.repository.api.IScheduledJobsRepository;
 import ansk.development.service.api.IScheduledJobsService;
 import ansk.development.service.methods.MessageMethod;
-import ansk.development.service.methods.TelegramFitnessExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
