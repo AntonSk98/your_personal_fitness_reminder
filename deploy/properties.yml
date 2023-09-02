@@ -11,7 +11,7 @@ notifications:
   unknownCommand: Oops, seems like I don't recognize that command. Let's stick to the exercises for now!
   enabledNotifications: Yay! Your motivation booster is ON! Prepare for inspiring workout reminders!
   disabledNotifications: Not feeling the notifications? No worries! We'll be here when you're ready to get back on track!
-  onStartup: Hi there! I'm back and better than ever! 
+  onStartup: Hi there! I'm back and better than ever!
   workoutInProgress: Keep the momentum going! Switching to another awesome workout!
   successfullyResetTimer: Timer reset successful! Your next fitness reminder is just a couple of hours away.
   failedToResetTimer: Oops! Something went awry. We'll fix it, promise! Please try again later.
@@ -23,21 +23,34 @@ notifications:
 
 scheduled_jobs:
   checkSession:
-    initialDelay: 5
-    interval: 5
-    timeUnit: MINUTES
+    initialDelay: 300
+    interval: 300
   sendWorkout:
-    initialDelay: 120
-    interval: 180
-    timeUnit: MINUTES
+    interval: 10800
+  noReminders:
+    from: '23:00'
+    to: '09:00'
+
+client_configuration_commands:
+  message: Here is the list of supported commands that you can use to tune some settings
+  commands:
+    -
+      description: Changes your current timezone
+      command: Command -> /setTimezone $timeout$
+      example: Example -> /setTimezone $GMT+2$
+    -
+      description: Defines a time range during which no reminders will be sent
+      command: Command -> /noReminders $from_hours$ $to_hours$
+      example: Example -> /noReminders $23:00$ $9:00$
 
 
 fitness_bot:
   onStartupNotificationsEnabled: true
   ignoreOldEvents: true
   sendExerciseDelayInMs: 30000
-  groupIntervalDelayInMs: 300000
   creator: AntonSk98
+  timezone: GMT+5
+
 
 workout_size:
   #number of iterations
@@ -47,15 +60,3 @@ workout_size:
   weightFree: 7
   pushUps: 5
   absWorkout: 7
-
-exercise_type_catalog_size:
-  biceps: 7
-  triceps: 5
-  chest: 5
-  back: 5
-  shoulders: 10
-  legs: 9
-  stretching: 41
-  weightFree: 18
-  pushUps: 12
-  abs: 23
