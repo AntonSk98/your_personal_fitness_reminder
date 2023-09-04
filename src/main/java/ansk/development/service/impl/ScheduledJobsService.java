@@ -11,10 +11,7 @@ import ansk.development.service.methods.MessageMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -42,15 +39,14 @@ public class ScheduledJobsService implements IScheduledJobsService {
     }
 
     private static long calculateInitialDelay() {
-        ZoneId zoneId = ZoneId.of(ConfigRegistry.props().botProperties().getTimezone());
 
-        ZonedDateTime now = toZonedTime(LocalTime.now(), ZoneId.systemDefault());
+        ZonedDateTime now = ZonedDateTime.now();
 
-        ZonedDateTime startAt = toZonedTime(ConfigRegistry
+        ZonedDateTime startAt = ConfigRegistry
                 .props()
                 .scheduledJobs()
                 .getNoReminders()
-                .getTo(), zoneId)
+                .getToInUserTimeZone()
                 .withZoneSameInstant(ZoneId.systemDefault());
 
         long sendFitnessReminderIntervalInSeconds = ConfigRegistry
@@ -59,12 +55,8 @@ public class ScheduledJobsService implements IScheduledJobsService {
                 .getSendWorkout()
                 .getInterval();
 
-        if (now.isBefore(startAt)) {
-            return startAt.toEpochSecond() - now.toEpochSecond();
-        }
-
         if (isTimeWithinNoReminderRange(now.plusSeconds(sendFitnessReminderIntervalInSeconds))) {
-            return startAt.plusDays(1).toEpochSecond() - now.toEpochSecond();
+            return startAt.toEpochSecond() - now.toEpochSecond();
         }
 
         // in this case calculate normal delay
@@ -83,33 +75,28 @@ public class ScheduledJobsService implements IScheduledJobsService {
     }
 
     private static boolean isCurrentTimeWithinNoRemindersRange() {
-        ZoneId zoneId = ZoneId.of(ConfigRegistry.props().botProperties().getTimezone());
-        return isTimeWithinNoReminderRange(toZonedTime(LocalTime.now(), zoneId));
+        return isTimeWithinNoReminderRange(ZonedDateTime.now());
 
     }
 
     private static boolean isTimeWithinNoReminderRange(ZonedDateTime time) {
         ZoneId zoneId = time.getZone();
 
-        ZonedDateTime from = toZonedTime(ConfigRegistry
+        ZonedDateTime from = ConfigRegistry
                 .props()
                 .scheduledJobs()
                 .getNoReminders()
-                .getFrom(), zoneId);
+                .getFromInUserTimeZone()
+                .withZoneSameInstant(zoneId);
 
-        ZonedDateTime to = toZonedTime(ConfigRegistry
+        ZonedDateTime to = ConfigRegistry
                 .props()
                 .scheduledJobs()
                 .getNoReminders()
-                .getTo(), zoneId)
-                .plusDays(1);
+                .getToInUserTimeZone()
+                .withZoneSameInstant(zoneId);
 
         return time.isAfter(from) && time.isBefore(to);
-    }
-
-    private static ZonedDateTime toZonedTime(LocalTime time, ZoneId timezone) {
-        return ZonedDateTime
-                .of(time.atDate(LocalDate.now()), timezone);
     }
 
     @Override
