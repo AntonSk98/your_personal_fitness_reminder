@@ -55,7 +55,7 @@ public class ScheduledJobsService implements IScheduledJobsService {
                 .getSendWorkout()
                 .getInterval();
 
-        if (isTimeWithinNoReminderRange(now.plusSeconds(sendFitnessReminderIntervalInSeconds))) {
+        if (isTimeWithinNoReminderRange(now.plusSeconds(sendFitnessReminderIntervalInSeconds), true)) {
             return startAt.toEpochSecond() - now.toEpochSecond();
         }
 
@@ -75,11 +75,11 @@ public class ScheduledJobsService implements IScheduledJobsService {
     }
 
     private static boolean isCurrentTimeWithinNoRemindersRange() {
-        return isTimeWithinNoReminderRange(ZonedDateTime.now());
+        return isTimeWithinNoReminderRange(ZonedDateTime.now(), false);
 
     }
 
-    private static boolean isTimeWithinNoReminderRange(ZonedDateTime time) {
+    private static boolean isTimeWithinNoReminderRange(ZonedDateTime time, boolean fromInitialDelay) {
         ZoneId zoneId = time.getZone();
 
         ZonedDateTime from = ConfigRegistry
@@ -96,7 +96,15 @@ public class ScheduledJobsService implements IScheduledJobsService {
                 .getToInUserTimeZone()
                 .withZoneSameInstant(zoneId);
 
-        return time.isAfter(from) && time.isBefore(to);
+        boolean shouldSendReminder = time.isAfter(from) && time.isBefore(to);
+        LOGGER.info("Time now: {}. From: {}. To: {}. Should a reminder be sent: {}. From initial delay: {}",
+                time,
+                from,
+                to,
+                shouldSendReminder,
+                fromInitialDelay
+        );
+        return shouldSendReminder;
     }
 
     @Override

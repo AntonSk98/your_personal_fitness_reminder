@@ -146,4 +146,11 @@ public class FitnessUpdateEvent {
                 && getParameters().isPresent()
                 && getParameters().get().length == fitnessBotCommands.numberOfParameters();
     }
+
+    @Override
+    public String toString() {
+        return "FitnessUpdateEvent{" +
+                "update=" + update +
+                '}';
+    }
 }
