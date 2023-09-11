@@ -80,7 +80,6 @@ public class ScheduledJobsService implements IScheduledJobsService {
     }
 
     private static boolean isTimeWithinNoReminderRange(ZonedDateTime time, boolean fromInitialDelay) {
-
         ZoneId zoneId = time.getZone();
 
         ZonedDateTime from = ConfigRegistry
@@ -96,10 +95,6 @@ public class ScheduledJobsService implements IScheduledJobsService {
                 .getNoReminders()
                 .getToInUserTimeZone()
                 .withZoneSameInstant(zoneId);
-
-        if (time.getDayOfMonth() > to.getDayOfMonth()) {
-            time = time.minusDays(1);
-        }
 
         boolean shouldSendReminder = time.isAfter(from) && time.isBefore(to);
         LOGGER.info("Time now: {}. From: {}. To: {}. Should a reminder be sent: {}. From initial delay: {}",
